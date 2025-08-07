@@ -397,8 +397,20 @@ let rec generate_stmt_tac (env : Env.t) (stmt : stmt) : unit =
 let generate_func_tac (env : Env.t) (func_def : func_def) : func_tac =
   current_tac_instrs := [];
   List.iter (generate_stmt_tac env) func_def.body;
-  let stack_size = 16 in (* 示例值，实际应根据函数体计算 *)
-  let stack_info = { frame_size = stack_size; spill_offset = 0; local_vars = [] } in
+  (* 计算局部变量数 *)
+  let local_vars =
+    List.fold_left (fun acc instr ->
+      match instr with
+      | Assign (Var name, _) -> if List.mem_assoc name acc then acc else (name, 0) :: acc
+      | _ -> acc
+    ) [] !current_tac_instrs
+  in
+  let param_count = List.length func_def.params in
+  let local_var_count = List.length local_vars in
+  (* 参数区+局部变量区+ra+fp，4字节对齐 *)
+  let raw_size = (param_count + local_var_count) * 4 + 8 in
+  let stack_size = ((raw_size + 15) lsr 4) lsl 4 in
+  let stack_info = { frame_size = stack_size; spill_offset = 0; local_vars = local_vars } in
   { fname = func_def.fname
   ; params = func_def.params
   ; body = !current_tac_instrs
