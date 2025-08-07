@@ -302,13 +302,14 @@ let rec generate_expr_tac (env : Env.t) (expr : expr) : operand =
     let op1_tac = generate_expr_tac env e1 in
     let op2_tac = generate_expr_tac env e2 in
     let result_temp = new_temp () in
-    current_tac_instrs
-    := !current_tac_instrs @ [ BinOp (result_temp, op, op1_tac, op2_tac) ];
+    current_tac_instrs := 
+      !current_tac_instrs @ [ BinOp (result_temp, op, op1_tac, op2_tac) ];
     result_temp
   | UnOp (op, e) ->
     let op1_tac = generate_expr_tac env e in
     let result_temp = new_temp () in
-    current_tac_instrs := !current_tac_instrs @ [ UnOp (result_temp, op1_tac) ];
+    current_tac_instrs := 
+      !current_tac_instrs @ [ UnOp (result_temp, op, op1_tac) ];  (* 修正：添加缺少的操作符参数 *)
     result_temp
   | Call (fname, args) ->
     let arg_tacs = List.map (generate_expr_tac env) args in
