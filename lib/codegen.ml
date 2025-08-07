@@ -414,7 +414,7 @@ let generate_func_tac (env : Env.t) (func_def : func_def) : func_tac =
   { fname = func_def.fname
   ; params = func_def.params
   ; body = !current_tac_instrs
-  ; return_type = func_def.rtype
+  ; return_type = func_def.rtyp
   ; stack_info = stack_info
   }
 ;;
