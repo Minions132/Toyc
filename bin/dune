@@ -1,0 +1,8 @@
+(executable
+ (public_name Toyc)
+ (name main)
+ (modules main)
+ (libraries Toyc)
+ (flags
+  (:standard -w -32-27-26-39-8-37))
+ (modes byte exe))

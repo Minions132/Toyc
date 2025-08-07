@@ -1,0 +1,5 @@
+int main() {
+    int x = 38;
+    x = x + 84;
+    return x;
+}

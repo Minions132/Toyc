@@ -1,0 +1,8 @@
+(library
+ (name Toyc)
+ (modules ast parser lexer semantic symbol env error typecheck tac codegen))
+
+(ocamllex lexer)
+
+(menhir
+ (modules parser))
