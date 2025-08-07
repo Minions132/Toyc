@@ -320,12 +320,12 @@ let rec generate_expr_tac (env : Env.t) (expr : expr) : operand =
      | Some finfo ->
        if finfo.return_type = TVoid
        then (
-         current_tac_instrs := !current_tac_instrs @ [ Call (None, fname, []) ];
+         current_tac_instrs := !current_tac_instrs @ [ Call (None, fname, arg_tacs) ];
          Temp (-1))
        else (
          let result_temp = new_temp () in
          current_tac_instrs
-         := !current_tac_instrs @ [ Call (Some result_temp, fname, []) ];
+         := !current_tac_instrs @ [ Call (Some result_temp, fname, arg_tacs) ];
          result_temp)
      | None ->
       Env.add_error
