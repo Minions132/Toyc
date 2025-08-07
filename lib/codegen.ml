@@ -395,13 +395,15 @@ let rec generate_stmt_tac (env : Env.t) (stmt : stmt) : unit =
 
 (* 函数翻译函数 *)
 let generate_func_tac (env : Env.t) (func_def : func_def) : func_tac =
-  reset_temp_label_counters ();
   current_tac_instrs := [];
   List.iter (generate_stmt_tac env) func_def.body;
+  let stack_size = 16 in (* 示例值，实际应根据函数体计算 *)
+  let stack_info = { frame_size = stack_size; spill_offset = 0; local_vars = [] } in
   { fname = func_def.fname
   ; params = func_def.params
   ; body = !current_tac_instrs
-  ; return_type = func_def.rtyp
+  ; return_type = func_def.rtype
+  ; stack_info = stack_info
   }
 ;;
 
